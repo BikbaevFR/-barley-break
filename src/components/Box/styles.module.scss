@@ -1,0 +1,41 @@
+@import "../../styles/variables.scss";
+
+.container {
+  position: relative;
+  width: 100%;
+  max-width: 700px;
+  max-width: 70vh;
+  margin: 0 auto;
+  margin-bottom: 32px;
+  background-color: $green;
+
+  &::before {
+    display: block;
+    padding-top: 100%;
+    content: "";
+  }
+}
+
+.cup {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: -1;
+  background-color: rgba($color: $green, $alpha: 70%);
+  opacity: 0;
+  transition: opacity 0.3s;
+
+  &Img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  &Visible {
+    z-index: 1;
+    opacity: 1;
+  }
+}

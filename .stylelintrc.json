@@ -1,0 +1,18 @@
+{
+  "extends": [
+    "stylelint-config-standard",
+    "stylelint-config-rational-order",
+    "stylelint-prettier/recommended"
+  ],
+  "plugins": ["stylelint-order", "stylelint-scss"],
+  "rules": {
+    "no-invalid-double-slash-comments": null,
+    "import-notation": "string"
+  },
+  "overrides": [
+    {
+      "files": ["*.scss", "**/*.scss"],
+      "customSyntax": "postcss-scss"
+    }
+  ]
+}

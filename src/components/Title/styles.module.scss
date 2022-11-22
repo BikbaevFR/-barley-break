@@ -1,0 +1,10 @@
+@import "../../styles/variables.scss";
+
+.title {
+  margin-bottom: 32px;
+  color: $purple;
+  font-weight: 500;
+  font-size: 3.125rem;
+  font-family: $font-family;
+  text-align: center;
+}
