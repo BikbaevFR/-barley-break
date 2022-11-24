@@ -11,9 +11,16 @@ interface ICellProps {
   canMove: boolean;
   onClick: () => void;
   moveCount: number;
+  mixSpeed: number;
 }
 
-const Cell: FC<ICellProps> = ({ cell, onClick, canMove, moveCount }) => {
+const Cell: FC<ICellProps> = ({
+  cell,
+  onClick,
+  canMove,
+  moveCount,
+  mixSpeed,
+}) => {
   const initialPosition = cell.position.initial;
   const currentPosition = cell.position.current;
 
@@ -37,7 +44,10 @@ const Cell: FC<ICellProps> = ({ cell, onClick, canMove, moveCount }) => {
         [styles.containerCanMove]: canMove,
         [styles.containerCorrectPosition]: isCorrectPosition,
       })}
-      style={{ transform: `translate(${x}%, ${y}%)` }}
+      style={{
+        transform: `translate(${x}%, ${y}%)`,
+        transition: `transform ${mixSpeed}ms`,
+      }}
       onClick={handleCellClick}
     >
       <div className={styles.content}>{value}</div>

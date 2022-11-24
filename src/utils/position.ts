@@ -1,10 +1,5 @@
-import {
-  Direction,
-  MAX_COORD,
-  MIN_COORD,
-  ROW_LENGTH,
-  STEP,
-} from "../constants";
+import { MAX_COORD, MIN_COORD, ROW_LENGTH, STEP } from "../constants";
+import { Direction } from "../constants/direction";
 import { DirectionStrings, IPosition } from "../types";
 
 export const getCellPosition = (index: number): IPosition => {

@@ -1,5 +1,6 @@
 import shuffle from "lodash/shuffle";
-import { Direction, MAX_COORD, MIN_COORD } from "../constants";
+import { MAX_COORD, MIN_COORD } from "../constants";
+import { Direction } from "../constants/direction";
 import { DirectionStrings, IPosition } from "../types";
 
 const getAvailableDirections = (

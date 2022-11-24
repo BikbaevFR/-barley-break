@@ -1,12 +1,12 @@
 import isNumber from "lodash/isNumber";
-import { FC, useEffect, useRef, useState } from "react";
+import { FC, useEffect, useMemo, useRef, useState } from "react";
 
 import Box from "../../components/Box";
 import Button from "../../components/Button";
 import Title from "../../components/Title";
 import Wrapper from "../../layouts/Wrapper";
 
-import { MIX_COUNT, OPPOSITE_DIRECTION } from "../../constants";
+import { OPPOSITE_DIRECTION } from "../../constants/direction";
 import {
   findMovingCellIndex,
   hasEveryCellCorrectPosition,
@@ -16,20 +16,30 @@ import { getRandomDirection } from "../../utils/direction";
 
 import { DirectionStrings, ICell } from "../../types";
 
+import { MixSpeed } from "../../constants/mix";
+import { useStopWatch } from "../../hooks/useStopWatch";
 import { useStore } from "../../store/useStore";
+import { calculateMixCount, getMixSpeed } from "../../utils/mix";
 import styles from "./styles.module.scss";
 
 const Home: FC = () => {
   const { cells, setCells, moveCount, setMoveCount } = useStore();
 
+  const { time, stop, reset, start } = useStopWatch();
+
   const [mixCount, setMixCount] = useState<number>(0);
+  const [isMix, setIsMix] = useState<boolean>(false);
   const [excludedDirection, setExcludedDirection] =
     useState<DirectionStrings | null>(null);
   const [isWon, setIsWon] = useState<boolean>(false);
 
-  const timerId = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const timerID = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const isMix = !!mixCount;
+  const mixSpeed = useMemo(() => {
+    if (isMix) return getMixSpeed(mixCount);
+
+    return MixSpeed.SLOW;
+  }, [isMix]);
 
   useEffect(() => {
     window.addEventListener("keydown", handleKeyDown);
@@ -37,17 +47,51 @@ const Home: FC = () => {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [cells]);
+  }, [cells, isMix]);
 
   useEffect(() => {
-    if (mixCount) {
-      timerId.current = setTimeout(mix, 300);
+    if (isMix && mixCount) {
+      timerID.current = setTimeout(mix, mixSpeed);
     }
 
-    if (!mixCount && timerId.current) {
-      timerId.current = null;
+    if (!mixCount) {
+      setIsMix(false);
     }
-  }, [mixCount]);
+
+    if (!isMix && timerID.current) {
+      timerID.current = null;
+      reset();
+    }
+  }, [isMix, mixCount]);
+
+  useEffect(() => {
+    setMixCount(calculateMixCount(time));
+  }, [time]);
+
+  const mix = () => {
+    const emptyCell = cells.at(-1) as ICell;
+
+    const randomDirection = getRandomDirection(
+      emptyCell.position.current,
+      excludedDirection
+    );
+
+    setExcludedDirection(OPPOSITE_DIRECTION[randomDirection]);
+
+    const index = findMovingCellIndex(cells, randomDirection);
+
+    if (isNumber(index)) {
+      const swappedCells = swapCells(cells, index);
+      setCells(swappedCells);
+
+      timerID.current && clearTimeout(timerID.current);
+      setMixCount((prev) => {
+        if (!prev) return 0;
+        return prev - 1;
+      });
+      setMoveCount(0);
+    }
+  };
 
   const handleCellClick = (index: number) => (): void => {
     if (isMix) return;
@@ -81,31 +125,16 @@ const Home: FC = () => {
 
   const handleButtonClick = (): void => {
     if (isWon) setIsWon(false);
-
-    mix();
-    setMixCount(MIX_COUNT);
+    setIsMix(true);
+    stop();
   };
 
-  const mix = () => {
-    const emptyCell = cells.at(-1) as ICell;
+  const handleButtonMouseDown = (): void => {
+    if (isWon) setIsWon(false);
 
-    const randomDirection = getRandomDirection(
-      emptyCell.position.current,
-      excludedDirection
-    );
+    if (time) reset();
 
-    setExcludedDirection(OPPOSITE_DIRECTION[randomDirection]);
-
-    const index = findMovingCellIndex(cells, randomDirection);
-
-    if (isNumber(index)) {
-      const swappedCells = swapCells(cells, index);
-      setCells(swappedCells);
-
-      timerId.current && clearTimeout(timerId.current);
-      setMixCount((prev) => prev - 1);
-      setMoveCount(0);
-    }
+    start();
   };
 
   return (
@@ -117,8 +146,14 @@ const Home: FC = () => {
           onCellClick={handleCellClick}
           isWon={isWon}
           moveCount={moveCount}
+          mixSpeed={mixSpeed}
         />
-        <Button onClick={handleButtonClick} isDisabled={!!mixCount} />
+        <Button
+          onClick={handleButtonClick}
+          onMouseDown={handleButtonMouseDown}
+          mixCount={mixCount}
+          isMix={isMix}
+        />
       </Wrapper>
     </section>
   );
