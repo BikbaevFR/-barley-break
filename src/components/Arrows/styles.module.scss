@@ -1,0 +1,10 @@
+@import "../../styles/variables.scss";
+@import "../Key/styles.module.scss";
+
+.container {
+  position: absolute;
+  top: $key-height;
+  left: calc(100% + #{$key-width});
+  width: calc(#{$key-width} * 3 + #{$gap} * 2);
+  height: calc(#{$key-height} * 2 + #{$gap});
+}

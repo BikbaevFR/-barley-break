@@ -7,6 +7,7 @@ import Cell from "../Cell";
 import styles from "./styles.module.scss";
 
 import cupSVG from "../../static/img/cup.svg";
+import Arrows from "../Arrows";
 
 interface IBoxProps {
   cells: ICell[];
@@ -27,6 +28,8 @@ const Box: FC<IBoxProps> = ({
 
   return (
     <div className={styles.container}>
+      <Arrows />
+
       <div
         className={cn(styles.cup, {
           [styles.cupVisible]: isWon,
