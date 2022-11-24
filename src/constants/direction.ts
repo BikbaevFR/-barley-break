@@ -7,10 +7,11 @@ export enum Direction {
   Left = "Left",
 }
 
-export const OPPOSITE_DIRECTION: { [key: DirectionStrings]: DirectionStrings } =
-  {
-    [Direction.Up]: Direction.Down,
-    [Direction.Down]: Direction.Up,
-    [Direction.Right]: Direction.Left,
-    [Direction.Left]: Direction.Right,
-  };
+export const OPPOSITE_DIRECTION: {
+  [key in DirectionStrings]: DirectionStrings;
+} = {
+  [Direction.Up]: Direction.Down,
+  [Direction.Down]: Direction.Up,
+  [Direction.Right]: Direction.Left,
+  [Direction.Left]: Direction.Right,
+};

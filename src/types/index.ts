@@ -1,4 +1,4 @@
-import { Direction } from "../constants";
+import { Direction } from "../constants/direction";
 
 export interface IPosition {
   x: number;
