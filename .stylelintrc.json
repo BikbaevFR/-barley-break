@@ -7,7 +7,8 @@
   "plugins": ["stylelint-order", "stylelint-scss"],
   "rules": {
     "no-invalid-double-slash-comments": null,
-    "import-notation": "string"
+    "import-notation": "string",
+    "function-no-unknown": [true, { "ignoreFunctions": ["lighten", "darken"] }]
   },
   "overrides": [
     {

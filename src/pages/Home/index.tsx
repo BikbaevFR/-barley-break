@@ -32,6 +32,7 @@ const Home: FC = () => {
   const [excludedDirection, setExcludedDirection] =
     useState<DirectionStrings | null>(null);
   const [isWon, setIsWon] = useState<boolean>(false);
+  const [activeKey, setActiveKey] = useState<DirectionStrings | null>(null);
 
   const timerID = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -43,9 +44,11 @@ const Home: FC = () => {
 
   useEffect(() => {
     window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("keyup", handleKeyUp);
 
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
+      window.addEventListener("keyup", handleKeyUp);
     };
   }, [cells, isMix]);
 
@@ -93,6 +96,18 @@ const Home: FC = () => {
     }
   };
 
+  const swapCellsByDirection = (direction: DirectionStrings): void => {
+    const index = findMovingCellIndex(cells, direction);
+
+    if (isNumber(index)) {
+      const swappedCells = swapCells(cells, index);
+
+      setCells(swappedCells);
+      setMoveCount(moveCount + 1);
+      setIsWon(hasEveryCellCorrectPosition(swappedCells));
+    }
+  };
+
   const handleCellClick = (index: number) => (): void => {
     if (isMix) return;
 
@@ -112,15 +127,17 @@ const Home: FC = () => {
 
     const direction = key.replace("Arrow", "") as DirectionStrings;
 
-    const index = findMovingCellIndex(cells, direction);
+    setActiveKey(direction);
 
-    if (isNumber(index)) {
-      const swappedCells = swapCells(cells, index);
+    swapCellsByDirection(direction);
+  };
 
-      setCells(swappedCells);
-      setMoveCount(moveCount + 1);
-      setIsWon(hasEveryCellCorrectPosition(swappedCells));
-    }
+  const handleKeyUp = (): void => setActiveKey(null);
+
+  const handleArrowClick = (direction: DirectionStrings) => (): void => {
+    if (isMix) return;
+
+    swapCellsByDirection(direction);
   };
 
   const handleButtonClick = (): void => {
@@ -147,6 +164,8 @@ const Home: FC = () => {
           isWon={isWon}
           moveCount={moveCount}
           mixSpeed={mixSpeed}
+          activeKey={activeKey}
+          onArrowClick={handleArrowClick}
         />
         <Button
           onClick={handleButtonClick}
