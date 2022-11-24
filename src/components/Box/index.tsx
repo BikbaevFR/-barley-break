@@ -1,7 +1,7 @@
 import cn from "classnames";
 import { FC } from "react";
 
-import { ICell } from "../../types";
+import { DirectionStrings, ICell } from "../../types";
 import { canCellMove } from "../../utils/position";
 import Cell from "../Cell";
 import styles from "./styles.module.scss";
@@ -15,6 +15,8 @@ interface IBoxProps {
   isWon: boolean;
   moveCount: number;
   mixSpeed: number;
+  activeKey: DirectionStrings | null;
+  onArrowClick: (direction: DirectionStrings) => () => void;
 }
 
 const Box: FC<IBoxProps> = ({
@@ -23,12 +25,14 @@ const Box: FC<IBoxProps> = ({
   isWon,
   moveCount,
   mixSpeed,
+  activeKey,
+  onArrowClick,
 }) => {
   const emptyCell = cells.at(-1);
 
   return (
     <div className={styles.container}>
-      <Arrows />
+      <Arrows activeKey={activeKey} onClick={onArrowClick} />
 
       <div
         className={cn(styles.cup, {

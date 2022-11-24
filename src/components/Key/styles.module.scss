@@ -1,6 +1,6 @@
 @import "../../styles/variables.scss";
 
-$key-width: 55px;
+$key-width: 60px;
 $key-height: 50px;
 $gap: 15px;
 
@@ -14,7 +14,6 @@ $gap: 15px;
   border-radius: 12px;
   transform: translateY(2px);
   transition: transform 600ms cubic-bezier(0.3, 0.7, 0.4, 1);
-  will-change: transform;
 }
 
 .edge {
@@ -46,11 +45,14 @@ $gap: 15px;
   border-radius: 12px;
   transform: translateY(-4px);
   transition: transform 600ms cubic-bezier(0.3, 0.7, 0.4, 1);
-  will-change: transform;
 }
 
-.img {
+.arrow {
   width: 17px;
+
+  rect {
+    transition: fill 34ms;
+  }
 }
 
 .key {
@@ -66,7 +68,7 @@ $gap: 15px;
   &Down {
     bottom: 0;
 
-    .img {
+    .arrow {
       transform: rotate(180deg);
     }
   }
@@ -75,7 +77,7 @@ $gap: 15px;
     bottom: 0;
     left: 0;
 
-    .img {
+    .arrow {
       transform: rotate(270deg);
     }
   }
@@ -84,7 +86,7 @@ $gap: 15px;
     right: 0;
     bottom: 0;
 
-    .img {
+    .arrow {
       transform: rotate(90deg);
     }
   }
@@ -109,15 +111,23 @@ $gap: 15px;
     }
   }
 
-  &:active {
+  &:active,
+  &Active {
+    /* stylelint-disable-next-line no-descending-specificity */
     .front {
       transform: translateY(-2px);
       transition: transform 34ms;
     }
 
+    /* stylelint-disable-next-line no-descending-specificity */
     .shadow {
       transform: translateY(1px);
       transition: transform 34ms;
+    }
+
+    /* stylelint-disable-next-line no-descending-specificity */
+    .arrow rect {
+      fill: $dark;
     }
   }
 
