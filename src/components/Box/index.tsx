@@ -13,9 +13,16 @@ interface IBoxProps {
   onCellClick: (id: number) => () => void;
   isWon: boolean;
   moveCount: number;
+  mixSpeed: number;
 }
 
-const Box: FC<IBoxProps> = ({ cells, onCellClick, isWon, moveCount }) => {
+const Box: FC<IBoxProps> = ({
+  cells,
+  onCellClick,
+  isWon,
+  moveCount,
+  mixSpeed,
+}) => {
   const emptyCell = cells.at(-1);
 
   return (
@@ -40,6 +47,7 @@ const Box: FC<IBoxProps> = ({ cells, onCellClick, isWon, moveCount }) => {
             emptyCell?.position.current
           )}
           moveCount={moveCount}
+          mixSpeed={mixSpeed}
         />
       ))}
     </div>

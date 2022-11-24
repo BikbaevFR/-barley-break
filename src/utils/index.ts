@@ -1,6 +1,5 @@
 import cloneDeep from "lodash/cloneDeep";
 import isEqual from "lodash/isEqual";
-import shuffle from "lodash/shuffle";
 import { MAX_LENGTH_ARRAY } from "../constants";
 import { DirectionStrings, ICell, IPosition } from "../types";
 import {
@@ -14,7 +13,7 @@ export const createCellsData = (length: number = MAX_LENGTH_ARRAY): ICell[] => {
   const array = new Array(length).fill("");
 
   const cellPositions = array.map((_, index) => getCellPosition(index));
-  const shuffledPositions = shuffle(cellPositions);
+  // const shuffledPositions = shuffle(cellPositions);
 
   const data = new Array(length).fill("").map((_, index) => ({
     id: index + 1,
