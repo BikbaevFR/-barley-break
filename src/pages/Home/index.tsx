@@ -16,6 +16,7 @@ import { getRandomDirection } from "../../utils/direction";
 
 import { DirectionStrings, ICell } from "../../types";
 
+import { useKeyPress } from "../../hooks/useKeyPress";
 import { useMix } from "../../hooks/useMix";
 import { useStore } from "../../store/useStore";
 import styles from "./styles.module.scss";
@@ -29,17 +30,15 @@ const Home: FC = () => {
   const [excludedDirection, setExcludedDirection] =
     useState<DirectionStrings | null>(null);
   const [isWon, setIsWon] = useState<boolean>(false);
-  const [activeKey, setActiveKey] = useState<DirectionStrings | null>(null);
+
+  const pressedKey = useKeyPress();
 
   useEffect(() => {
-    window.addEventListener("keydown", handleKeyDown);
-    window.addEventListener("keyup", handleKeyUp);
+    if (!pressedKey) return;
+    if (isMix) return;
 
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-      window.addEventListener("keyup", handleKeyUp);
-    };
-  }, [cells, isMix]);
+    swapCellsByDirection(pressedKey);
+  }, [pressedKey]);
 
   function mix() {
     const emptyCell = cells.at(-1) as ICell;
@@ -87,22 +86,6 @@ const Home: FC = () => {
     setIsWon(hasEveryCellCorrectPosition(swappedCells));
   };
 
-  const handleKeyDown = (e: KeyboardEvent): void => {
-    if (isMix) return;
-
-    const key = e.key;
-
-    if (!key.startsWith("Arrow")) return;
-
-    const direction = key.replace("Arrow", "") as DirectionStrings;
-
-    setActiveKey(direction);
-
-    swapCellsByDirection(direction);
-  };
-
-  const handleKeyUp = (): void => setActiveKey(null);
-
   const handleArrowClick = (direction: DirectionStrings) => (): void => {
     if (isMix) return;
 
@@ -130,7 +113,7 @@ const Home: FC = () => {
           isWon={isWon}
           moveCount={moveCount}
           mixSpeed={mixSpeed}
-          activeKey={activeKey}
+          pressedKey={pressedKey}
           onArrowClick={handleArrowClick}
         />
         <Button

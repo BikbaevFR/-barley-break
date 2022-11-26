@@ -15,7 +15,7 @@ interface IBoxProps {
   isWon: boolean;
   moveCount: number;
   mixSpeed: number;
-  activeKey: DirectionStrings | null;
+  pressedKey: DirectionStrings | null;
   onArrowClick: (direction: DirectionStrings) => () => void;
 }
 
@@ -25,14 +25,14 @@ const Box: FC<IBoxProps> = ({
   isWon,
   moveCount,
   mixSpeed,
-  activeKey,
+  pressedKey,
   onArrowClick,
 }) => {
   const emptyCell = cells.at(-1);
 
   return (
     <div className={styles.container}>
-      <Arrows activeKey={activeKey} onClick={onArrowClick} />
+      <Arrows pressedKey={pressedKey} onClick={onArrowClick} />
 
       <div
         className={cn(styles.cup, {

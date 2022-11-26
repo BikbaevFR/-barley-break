@@ -9,12 +9,12 @@ import { ReactComponent as ArrowSVG } from "../../static/img/arrow.svg";
 
 interface IKeyProps {
   direction: string;
-  activeKey: DirectionStrings | null;
+  pressedKey: DirectionStrings | null;
   onClick: () => void;
 }
 
-const Key: FC<IKeyProps> = ({ direction, activeKey, onClick }) => {
-  const isActive = direction === activeKey;
+const Key: FC<IKeyProps> = ({ direction, pressedKey, onClick }) => {
+  const isActive = direction === pressedKey;
 
   return (
     <button
