@@ -28,7 +28,7 @@ export const createCellsData = (length: number = MAX_LENGTH_ARRAY): ICell[] => {
   return data;
 };
 
-export const swapCells = (cells: ICell[], index: number): ICell[] => {
+export const getSwappedCells = (cells: ICell[], index: number): ICell[] => {
   const movingCellPosition = cells[index].position.current;
   const emptyCellPosition = cells.at(-1)?.position?.current as IPosition;
 

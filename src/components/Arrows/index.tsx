@@ -7,31 +7,31 @@ import { DirectionStrings } from "../../types";
 import Key from "../Key";
 
 interface IArrowsProps {
-  activeKey: DirectionStrings | null;
+  pressedKey: DirectionStrings | null;
   onClick: (direction: DirectionStrings) => () => void;
 }
 
-const Arrows: FC<IArrowsProps> = ({ activeKey, onClick }) => {
+const Arrows: FC<IArrowsProps> = ({ pressedKey, onClick }) => {
   return (
     <div className={styles.container}>
       <Key
         direction={Direction.Left}
-        activeKey={activeKey}
+        pressedKey={pressedKey}
         onClick={onClick(Direction.Left)}
       />
       <Key
         direction={Direction.Down}
-        activeKey={activeKey}
+        pressedKey={pressedKey}
         onClick={onClick(Direction.Down)}
       />
       <Key
         direction={Direction.Right}
-        activeKey={activeKey}
+        pressedKey={pressedKey}
         onClick={onClick(Direction.Right)}
       />
       <Key
         direction={Direction.Up}
-        activeKey={activeKey}
+        pressedKey={pressedKey}
         onClick={onClick(Direction.Up)}
       />
     </div>

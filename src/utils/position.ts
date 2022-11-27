@@ -16,8 +16,8 @@ export const getCellY = (
   direction: DirectionStrings,
   emptyCellY: number
 ): number => {
-  if (direction === Direction.Up) return emptyCellY + STEP;
-  if (direction === Direction.Down) return emptyCellY - STEP;
+  if (direction === Direction.Up) return emptyCellY - STEP;
+  if (direction === Direction.Down) return emptyCellY + STEP;
 
   return emptyCellY;
 };
@@ -26,8 +26,8 @@ export const getCellX = (
   direction: DirectionStrings,
   emptyCellX: number
 ): number => {
-  if (direction === Direction.Left) return emptyCellX + STEP;
-  if (direction === Direction.Right) return emptyCellX - STEP;
+  if (direction === Direction.Left) return emptyCellX - STEP;
+  if (direction === Direction.Right) return emptyCellX + STEP;
 
   return emptyCellX;
 };
