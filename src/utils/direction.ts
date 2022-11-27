@@ -1,7 +1,7 @@
 import shuffle from "lodash/shuffle";
 import { MAX_COORD, MIN_COORD } from "../constants";
 import { Direction } from "../constants/direction";
-import { DirectionStrings, IPosition } from "../types";
+import { DirectionStrings, ICell, IPosition } from "../types";
 
 const getAvailableDirections = (
   emptyCellPosition: IPosition,
@@ -9,19 +9,19 @@ const getAvailableDirections = (
 ) => {
   const directions = [];
 
-  if (emptyCellPosition.x >= MIN_COORD && emptyCellPosition.x < MAX_COORD) {
+  if (emptyCellPosition.x > MIN_COORD && emptyCellPosition.x <= MAX_COORD) {
     directions.push(Direction.Left);
   }
 
-  if (emptyCellPosition.x > MIN_COORD && emptyCellPosition.x <= MAX_COORD) {
+  if (emptyCellPosition.x >= MIN_COORD && emptyCellPosition.x < MAX_COORD) {
     directions.push(Direction.Right);
   }
 
-  if (emptyCellPosition.y >= MIN_COORD && emptyCellPosition.y < MAX_COORD) {
+  if (emptyCellPosition.y > MIN_COORD && emptyCellPosition.y <= MAX_COORD) {
     directions.push(Direction.Up);
   }
 
-  if (emptyCellPosition.y > MIN_COORD && emptyCellPosition.y <= MAX_COORD) {
+  if (emptyCellPosition.y >= MIN_COORD && emptyCellPosition.y < MAX_COORD) {
     directions.push(Direction.Down);
   }
 
@@ -29,11 +29,13 @@ const getAvailableDirections = (
 };
 
 export const getRandomDirection = (
-  emptyCellPosition: IPosition,
+  cells: ICell[],
   excludedDirection: DirectionStrings | null
 ): DirectionStrings => {
+  const emptyCell = cells.at(-1) as ICell;
+
   const availableDirections = getAvailableDirections(
-    emptyCellPosition,
+    emptyCell.position.current,
     excludedDirection
   );
 

@@ -6,96 +6,76 @@ import Button from "../../components/Button";
 import Title from "../../components/Title";
 import Wrapper from "../../layouts/Wrapper";
 
-import { OPPOSITE_DIRECTION } from "../../constants/direction";
-import {
-  findMovingCellIndex,
-  hasEveryCellCorrectPosition,
-  swapCells,
-} from "../../utils";
-import { getRandomDirection } from "../../utils/direction";
+import { findMovingCellIndex, hasEveryCellCorrectPosition } from "../../utils";
 
-import { DirectionStrings, ICell } from "../../types";
+import { DirectionStrings } from "../../types";
 
+import { useCells } from "../../hooks/useCells";
 import { useKeyPress } from "../../hooks/useKeyPress";
-import { useMix } from "../../hooks/useMix";
-import { useStore } from "../../store/useStore";
+import { useMixing } from "../../hooks/useMixing";
+import { useMoveCount } from "../../hooks/useMoveCount";
+
 import styles from "./styles.module.scss";
 
 const Home: FC = () => {
-  const { cells, setCells, moveCount, setMoveCount } = useStore();
+  const { cells, swapCells } = useCells();
 
-  const { isMix, mixCount, setMixCount, mixSpeed, startStopWatch, startMix } =
-    useMix(mix);
+  const { moveCount, increaseMoveCount, resetMoveCount } = useMoveCount();
 
-  const [excludedDirection, setExcludedDirection] =
-    useState<DirectionStrings | null>(null);
+  const {
+    isMix,
+    mixCount,
+    decreaseMixCount,
+    mixSpeed,
+    startStopWatch,
+    startMixing,
+  } = useMixing(cells, makeMove);
+
   const [isWon, setIsWon] = useState<boolean>(false);
 
   const pressedKey = useKeyPress();
 
   useEffect(() => {
     if (!pressedKey) return;
-    if (isMix) return;
 
-    swapCellsByDirection(pressedKey);
+    makeMove(true, null, pressedKey);
   }, [pressedKey]);
 
-  function mix() {
-    const emptyCell = cells.at(-1) as ICell;
+  useEffect(() => {
+    if (!moveCount) return;
+    setIsWon(hasEveryCellCorrectPosition(cells));
+  }, [moveCount]);
 
-    const randomDirection = getRandomDirection(
-      emptyCell.position.current,
-      excludedDirection
-    );
+  function makeMove(
+    isForward: boolean = true,
+    cellIndex: number | null = null,
+    direction: DirectionStrings | null = null
+  ): void {
+    if (isMix && isForward) return;
 
-    setExcludedDirection(OPPOSITE_DIRECTION[randomDirection]);
+    const index =
+      !cellIndex && direction
+        ? findMovingCellIndex(cells, direction)
+        : cellIndex;
 
-    const index = findMovingCellIndex(cells, randomDirection);
+    if (!isNumber(index)) return;
 
-    if (isNumber(index)) {
-      const swappedCells = swapCells(cells, index);
-      setCells(swappedCells);
+    swapCells(index);
 
-      setMixCount((prev) => {
-        if (!prev) return 0;
-        return prev - 1;
-      });
-      setMoveCount(0);
+    if (isForward) {
+      increaseMoveCount();
+    } else {
+      decreaseMixCount();
+      resetMoveCount();
     }
   }
 
-  const swapCellsByDirection = (direction: DirectionStrings): void => {
-    const index = findMovingCellIndex(cells, direction);
+  const handleCellClick = (index: number) => (): void => makeMove(true, index);
 
-    if (isNumber(index)) {
-      const swappedCells = swapCells(cells, index);
+  const handleArrowClick = (direction: DirectionStrings) => (): void =>
+    makeMove(true, null, direction);
 
-      setCells(swappedCells);
-      setMoveCount(moveCount + 1);
-      setIsWon(hasEveryCellCorrectPosition(swappedCells));
-    }
-  };
-
-  const handleCellClick = (index: number) => (): void => {
-    if (isMix) return;
-
-    const swappedCells = swapCells(cells, index);
-
-    setCells(swappedCells);
-    setMoveCount(moveCount + 1);
-    setIsWon(hasEveryCellCorrectPosition(swappedCells));
-  };
-
-  const handleArrowClick = (direction: DirectionStrings) => (): void => {
-    if (isMix) return;
-
-    swapCellsByDirection(direction);
-  };
-
-  const handleButtonClick = (): void => {
-    if (isWon) setIsWon(false);
-    startMix();
-  };
+  const handleButtonClick = (): void => startMixing();
 
   const handleButtonMouseDown = (): void => {
     if (isWon) setIsWon(false);
