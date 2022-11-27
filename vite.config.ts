@@ -6,5 +6,6 @@ console.log("svgr", svgr);
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: "/barley-break/",
   plugins: [svgr(), react()],
 });
