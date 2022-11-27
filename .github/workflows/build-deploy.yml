@@ -13,9 +13,6 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: "./bb"
 
     steps:
       - uses: actions/checkout@v3
@@ -39,7 +36,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: production-files
-          path: "bb/dist"
+          path: ./dist
           if-no-files-found: error
 
   deploy:
@@ -53,7 +50,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: production-files
-          path: "bb/dist"
+          path: ./dist
 
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v3
