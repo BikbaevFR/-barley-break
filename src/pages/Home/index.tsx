@@ -46,6 +46,10 @@ const Home: FC = () => {
     setIsWon(hasEveryCellCorrectPosition(cells));
   }, [moveCount]);
 
+  useEffect(() => {
+    if (isWon && isMix) setIsWon(false);
+  }, [isMix]);
+
   function makeMove(
     isForward: boolean = true,
     cellIndex: number | null = null,
@@ -75,14 +79,6 @@ const Home: FC = () => {
   const handleArrowClick = (direction: DirectionStrings) => (): void =>
     makeMove(true, null, direction);
 
-  const handleButtonClick = (): void => startMixing();
-
-  const handleButtonMouseDown = (): void => {
-    if (isWon) setIsWon(false);
-
-    startStopWatch();
-  };
-
   return (
     <section className={styles.container}>
       <Wrapper>
@@ -97,8 +93,8 @@ const Home: FC = () => {
           onArrowClick={handleArrowClick}
         />
         <Button
-          onClick={handleButtonClick}
-          onMouseDown={handleButtonMouseDown}
+          startMixing={startMixing}
+          startStopWatch={startStopWatch}
           mixCount={mixCount}
           isMix={isMix}
         />

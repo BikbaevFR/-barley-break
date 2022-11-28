@@ -1,19 +1,19 @@
 import cn from "classnames";
-import { FC, MouseEvent } from "react";
+import { FC } from "react";
 import { calculateScaleWidth } from "../../utils/mix";
 
 import styles from "./styles.module.scss";
 
 interface IButtonProps {
-  onClick: (e: MouseEvent<HTMLButtonElement>) => void;
-  onMouseDown: (e: MouseEvent<HTMLButtonElement>) => void;
+  startMixing: () => void;
+  startStopWatch: () => void;
   mixCount: number;
   isMix: boolean;
 }
 
 const Button: FC<IButtonProps> = ({
-  onClick,
-  onMouseDown,
+  startMixing,
+  startStopWatch,
   mixCount,
   isMix,
 }) => {
@@ -24,9 +24,11 @@ const Button: FC<IButtonProps> = ({
       className={cn(styles.button, {
         [styles.buttonDisabled]: isMix,
       })}
-      onClick={onClick}
       disabled={isMix}
-      onMouseDown={onMouseDown}
+      onClick={startMixing}
+      onMouseDown={startStopWatch}
+      onTouchStart={startStopWatch}
+      onTouchEnd={startMixing}
     >
       <span className={styles.scale} style={{ width: `${scaleWidth}%` }}></span>
       Перемешать

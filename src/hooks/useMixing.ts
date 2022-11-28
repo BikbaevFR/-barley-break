@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { OPPOSITE_DIRECTION } from "../constants/direction";
-import { MixSpeed } from "../constants/mix";
+import { MAX_BUTTON_HOLD_TIME, MixSpeed } from "../constants/mix";
 import { DirectionStrings, ICell } from "../types";
 import { getRandomDirection } from "../utils/direction";
 import { calculateMixCount, getMixSpeed } from "../utils/mix";
@@ -19,7 +19,7 @@ export const useMixCount = () => {
     start();
   };
 
-  return { mixCount, setMixCount, startStopWatch, stopStopWatch };
+  return { time, mixCount, setMixCount, startStopWatch, stopStopWatch };
 };
 
 export const useMixing = (
@@ -34,7 +34,7 @@ export const useMixing = (
   const [excludedDirection, setExcludedDirection] =
     useState<DirectionStrings | null>(null);
 
-  const { mixCount, setMixCount, startStopWatch, stopStopWatch } =
+  const { time, mixCount, setMixCount, startStopWatch, stopStopWatch } =
     useMixCount();
 
   const timerID = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -54,6 +54,10 @@ export const useMixing = (
       stopMixing();
     }
   }, [isMix, mixCount]);
+
+  useEffect(() => {
+    if (time === MAX_BUTTON_HOLD_TIME) startMixing();
+  }, [time]);
 
   const startMixing = () => {
     setIsMix(true);
